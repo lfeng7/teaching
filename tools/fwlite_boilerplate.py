@@ -57,7 +57,7 @@ def normalized_compare_plots(histlist):
         i+=1
      
 # Make plots and upload to webpage
-def plotting(histlist,event_type='MC',upload = False,testing = 'testing',logy=False):
+def plotting(histlist,event_type='MC',upload = False,testing = 'testing',logy=False,options=''):
     prefix = './plots/'
     # check if plotting dir is made. If not , make it now
     if not os.path.exists(prefix):
@@ -78,7 +78,7 @@ def plotting(histlist,event_type='MC',upload = False,testing = 'testing',logy=Fa
         name = plotdir+event_type+'_'+ihist.GetName()+'.png'
         c1 = ROOT.TCanvas()
         if logy == "setlogy" : c1.SetLogy()
-        ihist.Draw()
+        ihist.Draw(options)
         c1.SaveAs(name)
         c1.Write()
     # dump to webpage

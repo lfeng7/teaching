@@ -13,13 +13,15 @@ parser.add_option('--inputfile', metavar='F', type='string', action='store',
 
 argv = []
 
-grades = [line for line in open(options.inputfile)]
+grades = [int(line.strip()) for line in open(options.inputfile)]
 print grades
 
 # Book histograms
-h1 = ROOT.TH1D('grades','lab3 grades;grades;occurence',10,35,50)
+h1 = ROOT.TH1D('grades','lab3 grades;grades;occurence',30,35,50)
 
-for i in grades : h1.Fill(grades)
+for grade in grades : h1.Fill(grade)
+h1.SetFillColor(4)
 
 hlist = [h1]
-plotting(hlist,'teaching','dump','no','') 
+plotting(hlist,'teaching','dump','no testing','not log') 
+saving(hlist,'teaching')
