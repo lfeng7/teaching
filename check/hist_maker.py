@@ -34,13 +34,19 @@ ldays = options.longdays
 interval = options.interval
 # Book histograms
 h_days = ROOT.TH1D('h_days','complete days, all locations and types;days;occurence',360/binw,0,360)
-h_days_f1 = ROOT.TH1D('h_days_f1','complete days, F1, all locations;days;occurence',360/binw,0,360)
-h_days_shanghai = ROOT.TH1D('h_days_shanghai','complete days, Shanghai;days;occurence',360/binw,0,360)
-h_days_shanghai_f1_renew = ROOT.TH1D('h_days_shanghai_f1_renew','complete days, shanghai f1 renew;days;occurence',360/binw,0,360)
-h_days_long = ROOT.TH1D('h_days_long_'+str(ldays),'complete days, all locations and types, checks longer than '+str(ldays)+' days;days;occurence',360/binw,0,360)
+# Study the correlations
+h_days_renew = ROOT.TH1D('h_days_renew'+str(ldays),'all renewal cases, checks longer than '+str(ldays)+' days;days;occurence',360/binw,0,360)
+h_days_new = ROOT.TH1D('h_days_new'+str(ldays),'all new cases, checks longer than '+str(ldays)+' days;days;occurence',360/binw,0,360)
+h_days_f1 = ROOT.TH1D('h_days_long_'+str(ldays),'all f1, checks longer than '+str(ldays)+' days;days;occurence',360/binw,0,360)
+h_days_j1 = ROOT.TH1D('h_days_long_'+str(ldays),'all j1, checks longer than '+str(ldays)+' days;days;occurence',360/binw,0,360)
+h_days_shanghai = ROOT.TH1D('h_days_shanghai','all Shanghai, F1;days;occurence',360/binw,0,360)
+h_days_beijing = ROOT.TH1D('h_days_shanghai','all beijing, F1;days;occurence',360/binw,0,360)
+# My specific case
+h_days_shanghai_f1_renew = ROOT.TH1D('h_days_shanghai','all beijing, F1;days;occurence',360/binw,0,360)
 
 
-hlist = [h_days,h_days_shanghai,h_days_f1,h_days_shanghai_f1_renew,h_days_long]
+
+hlist = [h_days,h_days_renew,h_days_new,h_days_f1,h_days_j1,h_days_shanghai,h_days_beijing,h_days_shanghai_f1_renew]
 
 for line in data:
     raw_data = line.split('\t')
@@ -53,11 +59,16 @@ for line in data:
     complete_data = raw_data[8]
     waiting_days = int(raw_data[9])
     # Fill histograms
+    if not  waiting_days>ldays and waiting_days<(ldays+interval) : continue
+
     h_days.Fill(waiting_days)
-    if visa_type in f1_type : h_days_f1.Fill(waiting_days)
+    if visa_type == 'F1' : h_days_f1.Fill(waiting_days)
+    if visa_type == 'J1' : h_days_j1.Fill(waiting_days)
     if city == 'ShangHai': h_days_shanghai.Fill(waiting_days)
-    if visa_type in f1_type and city == 'ShangHai' and visa_entry == 'Renewal' : h_days_shanghai_f1_renew.Fill(waiting_days)
-    if visa_type in f1_type and city == 'ShangHai' and  waiting_days>ldays and waiting_days<(ldays+interval): h_days_long.Fill(waiting_days)
+    if city == 'BeiJing' : h_days_beijing.Fill(waiting_days)
+    if visa_entry == 'Renewal' : h_days_renew.Fill(waiting_days)
+    if visa_entry == 'New' : h_days_new.Fill(waiting_days)
+    if visa_type =='F1' and city == 'ShangHai' and visa_entry == 'Renewal' : h_days_shanghai_f1_renew.Fill(waiting_days)
     
 for ihist in hlist:    
     ihist.SetFillColor(4)
