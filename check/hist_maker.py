@@ -16,7 +16,7 @@ argv = []
 # Constants
 f1_type = ['F1','F-1','f1','F 1']
 # Get input file
-with open('info.csv','r') as fin:
+with open('check_data.csv','r') as fin:
     data = fin.readlines()
 
 # Book histograms
